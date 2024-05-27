@@ -39,6 +39,7 @@ interface ButtonProps
     VariantProps<typeof buttonVariants> {
   children: ReactNode;
   isLoading?: boolean;
+  // type?: "submit" | "button" | "reset";
   type?: "submit" | "button" | "reset";
 }
 

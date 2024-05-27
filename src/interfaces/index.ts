@@ -35,3 +35,9 @@ export interface IRegisterInput {
     pattern?: RegExp;
   };
 }
+
+export interface ITodo {
+  id: number;
+  title: string;
+  description: string;
+}
