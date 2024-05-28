@@ -413,7 +413,7 @@ const TodoList = () => {
     try {
       const { status } = await axiosInstance.post(
         `/todos`,
-        { data: { title, description } },
+        { data: { title, description, user: [userData.user.id] } },
         {
           headers: {
             Authorization: `Bearer ${userData.jwt}`,
@@ -456,6 +456,24 @@ const TodoList = () => {
       setIsUpdating(false);
     }
   };
+  const onGenerateTodos = async () => {
+    for (let i = 0; i <= 100; i++) {
+      try {
+        const { data } = await axiosInstance.post(
+          `/todos`,
+          { data: { title: "", description: "", user: [userData.user.id] } },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.jwt}`,
+            },
+          }
+        );
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   //** Remove
   const onRemove = async () => {
     try {
@@ -484,9 +502,21 @@ const TodoList = () => {
   return (
     <div className="space-y-1">
       <div className="w-fit mx-auto my-10">
-        <Button onClick={onOpenAddModal} size={"sm"}>
-          Add Todo
-        </Button>
+        {isLoading ? (
+          <div className="flex space-x-2 item-center">
+            <div className="w-32 h-9 bg-gray-300 rounded-md dark:bg-gray-400"></div>
+            <div className="w-32 h-9 bg-gray-300 rounded-md dark:bg-gray-400"></div>
+          </div>
+        ) : (
+          <div className="flex space-x-2 item-center">
+            <Button variant={"default"} onClick={onOpenAddModal} size={"sm"}>
+              Add Todo
+            </Button>
+            <Button variant={"outline"} onClick={onGenerateTodos} size={"sm"}>
+              Generate todos
+            </Button>
+          </div>
+        )}
       </div>
       {data.todos.length ? (
         data.todos.map((todo: ITodo) => (
@@ -543,7 +573,7 @@ const TodoList = () => {
               variant={"cancel"}
               className="w-full"
               onClick={onCloseAddModal}
-              type = "button"
+              type="button"
             >
               Cancel
             </Button>
@@ -579,7 +609,7 @@ const TodoList = () => {
               variant={"cancel"}
               className="w-full"
               onClick={onCloseEditModal}
-              type = "button"
+              type="button"
             >
               Cancel
             </Button>
