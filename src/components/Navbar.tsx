@@ -35,6 +35,9 @@ const Navbar = () => {
             <li className="text-white duration-200 text-md">
               <NavLink to="/Profile">Profile</NavLink>
             </li>
+            <li className="text-white duration-200 text-md">
+              <NavLink to="/todos">Todos</NavLink>
+            </li>
             <Button
               className="bg-indigo-500 cursor-pointer"
               size={"sm"}

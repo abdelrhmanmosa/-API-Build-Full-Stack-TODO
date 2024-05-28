@@ -319,12 +319,15 @@ import { ITodo } from "../interfaces";
 import Textarea from "./ui/Textarea";
 import axiosInstance from "../config/axios.config";
 import TodoSkeleton from "./TodoSkeleton";
+import { faker } from "@faker-js/faker";
 // import { compileString } from "sass";
 
 const TodoList = () => {
+  //** get user data from local storage
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
+  //** states
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [queryVersion, setQueryVersion] = useState(1);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -339,7 +342,7 @@ const TodoList = () => {
     title: "",
     description: "",
   });
-
+  //* fetch data from API with CustomQuery
   const { isLoading, data } = useCustomQuery({
     queryKey: ["todoList", `${queryVersion}`],
     url: "/users/me?populate=todos",
@@ -461,7 +464,13 @@ const TodoList = () => {
       try {
         const { data } = await axiosInstance.post(
           `/todos`,
-          { data: { title: "", description: "", user: [userData.user.id] } },
+          {
+            data: {
+              title: faker.word.words(5),
+              description: faker.lorem.paragraph(2),
+              user: [userData.user.id],
+            },
+          },
           {
             headers: {
               Authorization: `Bearer ${userData.jwt}`,
@@ -490,7 +499,7 @@ const TodoList = () => {
       console.log(error);
     }
   };
-
+  //** Loading
   if (isLoading)
     return (
       <div className="space-y-3">
