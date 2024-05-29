@@ -135,6 +135,7 @@
 // };
 
 // export default TodosPage;
+import { useState } from "react";
 import Paginator from "../components/ui/Paginator";
 import useCustomQuery from "../hooks/useAuthenticatedQuery";
 const TodosPage = () => {
@@ -142,9 +143,10 @@ const TodosPage = () => {
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
+  const [page, setPage] = useState<number>(1);
 
   const { isLoading, data } = useCustomQuery({
-    queryKey: ["paginationTodos"],
+    queryKey: ["paginationTodos", `${page}`],
     url: "/todos",
     config: {
       headers: {
@@ -152,6 +154,13 @@ const TodosPage = () => {
       },
     },
   });
+  // ** Handler
+  const onClickPrev = () => {
+    setPage((prev: number) => prev - 1);
+  };
+  const onClickNext = () => {
+    setPage((Next: number) => Next + 1);
+  };
   // console.log(data);
   if (isLoading) return <h3 className="space-y-3">Loading...</h3>;
   return (
@@ -161,16 +170,18 @@ const TodosPage = () => {
           ({
             id,
             attributes,
+            idx,
           }: {
-            id: number,
-            attributes: { title: string },
+            id: number;
+            idx: number;
+            attributes: { title: string };
           }) => (
             <div
               key={id}
               className="flex items-center justify-between hover:bg-gray-100 duration-300 p-3 rounded-md even:bg-gray-100"
             >
               <h3 className="w-full font-semibold">
-                {id} - {attributes.title}
+                {id} - {idx} -{attributes.title}
               </h3>
             </div>
           )
@@ -178,9 +189,13 @@ const TodosPage = () => {
       ) : (
         <h3>No Todos Yet</h3>
       )}
-      <Paginator  />
+      <Paginator
+        page={page}
+        pageCount={3}
+        onClickPrev={onClickPrev}
+        onClickNext={onClickNext}
+      />
     </div>
-
   );
 };
 
