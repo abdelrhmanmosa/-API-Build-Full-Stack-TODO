@@ -460,7 +460,7 @@ const TodoList = () => {
     }
   };
   const onGenerateTodos = async () => {
-    for (let i = 0; i <= 100; i++) {
+    for (let i = 0; i <= 50; i++) {
       try {
         const { data } = await axiosInstance.post(
           `/todos`,
